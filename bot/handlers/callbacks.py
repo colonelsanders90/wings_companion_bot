@@ -1,6 +1,6 @@
 import logging
 
-from telegram import Update
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import ContextTypes
 
 from bot.keyboards.menus import (
@@ -52,8 +52,7 @@ _DRESS = (
 
 _NURSING_PROMPT = (
     "🤱 *FIND NEARBY LACTATION ROOMS*\n\n"
-    "Share your location to find the nearest rooms:\n\n"
-    "Tap the 📎 attachment icon → *Location* → *Send My Current Location*"
+    "Tap the button below to share your location and I'll show you the nearest rooms."
 )
 
 _HARASSMENT = (
@@ -78,20 +77,46 @@ _ANON_FEEDBACK = (
 )
 
 # ── Route map: callback_data → (text, keyboard_fn, parse_mode) ───────────────
+# "nursing" is handled separately below — it needs to send a ReplyKeyboardMarkup.
 
 _ROUTES: dict[str, tuple[str, callable, str | None]] = {
-    "menu":         (_WELCOME,        main_menu,        "Markdown"),
-    "info":         (_INFO,           info_menu,        "Markdown"),
-    "mentorship":   (_MENTORSHIP,     back_to_start,    "Markdown"),
-    "policies":     (_POLICIES,       policies_menu,    "Markdown"),
-    "dress":        (_DRESS,          back_to_start,    "Markdown"),
-    "nursing":      (_NURSING_PROMPT, nursing_back_menu, "Markdown"),
-    "harassment":   (_HARASSMENT,     back_to_start,    "Markdown"),
-    "contact":      (_CONTACT,        contact_menu,     "Markdown"),
-    "channel":      (_CHANNEL,        back_to_start,    None),
-    "email":        (_EMAIL,          back_to_start,    None),
+    "menu":         (_WELCOME,        main_menu,          "Markdown"),
+    "info":         (_INFO,           info_menu,          "Markdown"),
+    "mentorship":   (_MENTORSHIP,     back_to_start,      "Markdown"),
+    "policies":     (_POLICIES,       policies_menu,      "Markdown"),
+    "dress":        (_DRESS,          back_to_start,      "Markdown"),
+    "harassment":   (_HARASSMENT,     back_to_start,      "Markdown"),
+    "contact":      (_CONTACT,        contact_menu,       "Markdown"),
+    "channel":      (_CHANNEL,        back_to_start,      None),
+    "email":        (_EMAIL,          back_to_start,      None),
     "anon_feedback":(_ANON_FEEDBACK,  anon_feedback_menu, "Markdown"),
 }
+
+
+async def _cleanup_nursing(context: ContextTypes.DEFAULT_TYPE, chat_id: int) -> None:
+    """Delete any temporary nursing flow messages and remove the reply keyboard."""
+    kb_msg_id = context.user_data.pop("nursing_kb_msg_id", None)
+    if kb_msg_id:
+        try:
+            await context.bot.delete_message(chat_id, kb_msg_id)
+        except Exception:
+            pass
+        # Send and immediately delete a silent ReplyKeyboardRemove to dismiss the keyboard
+        try:
+            rm = await context.bot.send_message(
+                chat_id, "\u200b", reply_markup=ReplyKeyboardRemove()
+            )
+            await context.bot.delete_message(chat_id, rm.message_id)
+        except Exception:
+            pass
+
+    nursing = context.user_data.pop("nursing_msgs", None)
+    if nursing:
+        for mid in nursing["delete"]:
+            try:
+                await context.bot.delete_message(nursing["chat_id"], mid)
+            except Exception:
+                pass
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -103,14 +128,22 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logger.warning("Stale callback ignored: %s", exc)
         return
 
-    # Delete venue cards and summary when user navigates away from nursing results
-    nursing = context.user_data.pop("nursing_msgs", None)
-    if nursing:
-        for mid in nursing["delete"] + [nursing["location_msg_id"]]:
-            try:
-                await context.bot.delete_message(nursing["chat_id"], mid)
-            except Exception:
-                pass
+    chat_id = query.message.chat_id
+    await _cleanup_nursing(context, chat_id)
+
+    if query.data == "nursing":
+        await safe_edit(query, _NURSING_PROMPT, nursing_back_menu(), "Markdown")
+        kb_msg = await context.bot.send_message(
+            chat_id,
+            "📍 Tap the button below to share your location:",
+            reply_markup=ReplyKeyboardMarkup(
+                [[KeyboardButton("📍 Share My Location", request_location=True)]],
+                resize_keyboard=True,
+                one_time_keyboard=True,
+            ),
+        )
+        context.user_data["nursing_kb_msg_id"] = kb_msg.message_id
+        return
 
     route = _ROUTES.get(query.data)
     if route is None:
