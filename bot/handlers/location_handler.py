@@ -29,24 +29,29 @@ async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     )
 
     # Venue cards with map thumbnail + navigation button
-    for i, (dist_km, room) in enumerate(results):
+    for dist_km, room in results:
         dist_str = f"{dist_km * 1000:.0f} m" if dist_km < 1 else f"{dist_km:.1f} km"
         maps_url = (
             f"https://www.google.com/maps/dir/?api=1"
             f"&origin={loc.latitude},{loc.longitude}"
             f"&destination={room['lat']},{room['lng']}"
         )
-
-        is_last = i == len(results) - 1
-        buttons = [[InlineKeyboardButton("🗺️ Navigate", url=maps_url)]]
-        if is_last:
-            buttons.append([InlineKeyboardButton("◀️ Back to Start", callback_data="menu")])
-
         await context.bot.send_venue(
             update.message.chat_id,
             latitude=room["lat"],
             longitude=room["lng"],
             title=room["name"],
             address=f"{room['building']}, {room['floor']} · {room['hours']} · {dist_str} away",
-            reply_markup=InlineKeyboardMarkup(buttons),
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("🗺️ Navigate", url=maps_url)]]
+            ),
         )
+
+    # Separate text message so Back to Start can be edited into the main menu
+    await context.bot.send_message(
+        update.message.chat_id,
+        "Tap below to return to the main menu.",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("◀️ Back to Start", callback_data="menu")]]
+        ),
+    )
