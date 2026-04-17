@@ -103,6 +103,15 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logger.warning("Stale callback ignored: %s", exc)
         return
 
+    # Delete venue cards and summary when user navigates away from nursing results
+    nursing = context.user_data.pop("nursing_msgs", None)
+    if nursing:
+        for mid in nursing["delete"] + [nursing["location_msg_id"]]:
+            try:
+                await context.bot.delete_message(nursing["chat_id"], mid)
+            except Exception:
+                pass
+
     route = _ROUTES.get(query.data)
     if route is None:
         logger.warning("Unknown callback_data: %s", query.data)

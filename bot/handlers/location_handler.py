@@ -13,7 +13,7 @@ async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     loc = update.message.location
     results = nearest_rooms(loc.latitude, loc.longitude, LACTATION_ROOMS, n=2)
 
-    context.user_data.pop("awaiting_nursing_location", None)
+    msgs_to_delete = []
 
     # Summary text — also dismisses the reply keyboard
     lines = ["🤱 *NEAREST LACTATION ROOMS*\n"]
@@ -22,11 +22,12 @@ async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         lines.append(f"*{i}.* {room['name']} — _{dist_str}_")
     lines.append("\n_Tap a venue below to view on the map and navigate._")
 
-    await update.message.reply_text(
+    summary = await update.message.reply_text(
         "\n".join(lines),
         parse_mode="Markdown",
         reply_markup=ReplyKeyboardRemove(),
     )
+    msgs_to_delete.append(summary.message_id)
 
     # Venue cards with map thumbnail + navigation button
     for dist_km, room in results:
@@ -36,7 +37,7 @@ async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             f"&origin={loc.latitude},{loc.longitude}"
             f"&destination={room['lat']},{room['lng']}"
         )
-        await context.bot.send_venue(
+        venue = await context.bot.send_venue(
             update.message.chat_id,
             latitude=room["lat"],
             longitude=room["lng"],
@@ -46,12 +47,21 @@ async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 [[InlineKeyboardButton("🗺️ Navigate", url=maps_url)]]
             ),
         )
+        msgs_to_delete.append(venue.message_id)
 
-    # Separate text message so Back to Start can be edited into the main menu
-    await context.bot.send_message(
+    # Plain text message so Back to Start can be edited into the main menu
+    back_msg = await context.bot.send_message(
         update.message.chat_id,
         "Tap below to return to the main menu.",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("◀️ Back to Start", callback_data="menu")]]
         ),
     )
+
+    # Store IDs so the button handler can delete them on navigation
+    context.user_data["nursing_msgs"] = {
+        "chat_id": update.message.chat_id,
+        "delete": msgs_to_delete,
+        "location_msg_id": update.message.message_id,
+        "back_msg_id": back_msg.message_id,
+    }
