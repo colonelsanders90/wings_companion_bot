@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 async def handle_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     loc = update.message.location
-    results = nearest_rooms(loc.latitude, loc.longitude, LACTATION_ROOMS, n=5)
+    results = nearest_rooms(loc.latitude, loc.longitude, LACTATION_ROOMS, n=2)
 
     context.user_data.pop("awaiting_nursing_location", None)
 
