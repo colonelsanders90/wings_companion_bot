@@ -13,6 +13,7 @@ WELCOME_TEXT = (
     "to the right information, the right people, and the right channels — so that no question goes "
     "unanswered and no concern goes unheard.\n\n"
     "You are not alone. The WINGS community stands behind you, and I personally stand behind every one of you.\n\n"
+    "Tap *Start* whenever you need us. We are always here.\n\n"
     "Warmly,\n"
     "*COL Lee Mei Yi*\n"
     "Head, RSAF WINGS\n\n"
