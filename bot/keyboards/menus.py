@@ -44,6 +44,12 @@ def anon_feedback_menu() -> InlineKeyboardMarkup:
     ])
 
 
+def nursing_back_menu() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("◀️ Back", callback_data="policies")],
+    ])
+
+
 def back_to_start() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("◀️ Back to Start", callback_data="menu")],

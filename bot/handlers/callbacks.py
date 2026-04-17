@@ -1,6 +1,6 @@
 import logging
 
-from telegram import Update
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import ContextTypes
 
 from bot.keyboards.menus import (
@@ -9,6 +9,7 @@ from bot.keyboards.menus import (
     contact_menu,
     info_menu,
     main_menu,
+    nursing_back_menu,
     policies_menu,
 )
 from bot.utils.helpers import safe_edit
@@ -49,11 +50,9 @@ _DRESS = (
     "• Neat and professional grooming at all times"
 )
 
-_NURSING = (
-    "🤱 *NURSING ROOM*\n\n"
-    "• Designated nursing rooms available at HQ\n"
-    "• Accessible during office hours\n"
-    "• Contact your unit admin for location details"
+_NURSING_PROMPT = (
+    "🤱 *FIND NEARBY LACTATION ROOMS*\n\n"
+    "Tap *Share My Location* below and I'll show you the nearest lactation rooms."
 )
 
 _HARASSMENT = (
@@ -85,7 +84,6 @@ _ROUTES: dict[str, tuple[str, callable, str | None]] = {
     "mentorship":   (_MENTORSHIP,     back_to_start,    "Markdown"),
     "policies":     (_POLICIES,       policies_menu,    "Markdown"),
     "dress":        (_DRESS,          back_to_start,    "Markdown"),
-    "nursing":      (_NURSING,        back_to_start,    "Markdown"),
     "harassment":   (_HARASSMENT,     back_to_start,    "Markdown"),
     "contact":      (_CONTACT,        contact_menu,     "Markdown"),
     "channel":      (_CHANNEL,        back_to_start,    None),
@@ -101,6 +99,31 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.answer()
     except Exception as exc:
         logger.warning("Stale callback ignored: %s", exc)
+        return
+
+    # If user navigates away from the nursing location flow, remove the reply keyboard
+    if context.user_data.pop("awaiting_nursing_location", False) and query.data != "nursing":
+        try:
+            cleanup = await context.bot.send_message(
+                query.message.chat_id, "\u200b", reply_markup=ReplyKeyboardRemove()
+            )
+            await context.bot.delete_message(query.message.chat_id, cleanup.message_id)
+        except Exception:
+            pass
+
+    if query.data == "nursing":
+        await safe_edit(query, _NURSING_PROMPT, nursing_back_menu(), "Markdown")
+        await context.bot.send_message(
+            query.message.chat_id,
+            "📍 Tap the button below to share your location:",
+            reply_markup=ReplyKeyboardMarkup(
+                [[KeyboardButton("📍 Share My Location", request_location=True)]],
+                resize_keyboard=True,
+                one_time_keyboard=True,
+                input_field_placeholder="Sharing location...",
+            ),
+        )
+        context.user_data["awaiting_nursing_location"] = True
         return
 
     route = _ROUTES.get(query.data)

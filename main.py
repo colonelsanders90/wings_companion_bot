@@ -9,11 +9,12 @@ Entry point — supports both polling (Railway / local) and webhook (AWS) modes.
 
 import logging
 
-from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler
+from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, MessageHandler, filters
 
 import config
 from bot.handlers.callbacks import button
 from bot.handlers.commands import start
+from bot.handlers.location_handler import handle_location
 
 logging.basicConfig(
     format="%(asctime)s | %(levelname)-8s | %(name)s: %(message)s",
@@ -26,6 +27,7 @@ def build_app():
     app = ApplicationBuilder().token(config.BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button))
+    app.add_handler(MessageHandler(filters.LOCATION, handle_location))
     return app
 
 
