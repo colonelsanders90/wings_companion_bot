@@ -7,10 +7,12 @@ from bot.keyboards.menus import (
     anon_feedback_menu,
     back_to_start,
     contact_menu,
+    health_menu,
     info_menu,
     main_menu,
     nursing_back_menu,
     policies_menu,
+    welfare_menu,
 )
 from bot.utils.helpers import safe_edit
 
@@ -50,6 +52,25 @@ _DRESS = (
     "• Neat and professional grooming at all times"
 )
 
+_HEALTH = "💪 *HEALTH & FITNESS*\n\nSelect a topic:"
+
+_IPPT = (
+    "🏃 *IPPT STANDARDS (FEMALE)*\n\n"
+    "IPPT consists of 3 stations:\n"
+    "• *Push-ups* (1 min)\n"
+    "• *Sit-ups* (1 min)\n"
+    "• *2.4km Run*\n\n"
+    "🏅 *Award Levels*\n"
+    "• 🥇 Gold — ≥ 85 points\n"
+    "• 🥈 Silver — 75–84 points\n"
+    "• ✅ Pass — 51–74 points\n\n"
+    "📅 Point requirements ease with age group (22 & below through 45+).\n\n"
+    "⚠️ Pregnant and post-natal servicewomen are exempt — consult your MO for the exemption period.\n\n"
+    "_Verify exact cutoffs for your age group on the official NS Portal IPPT calculator._"
+)
+
+_WELFARE = "🤱 *WELFARE & SUPPORT*\n\nSelect a topic:"
+
 _NURSING_PROMPT = (
     "🤱 *FIND NEARBY LACTATION ROOMS*\n\n"
     "Tap the button below to share your location and I'll show you the nearest rooms."
@@ -83,6 +104,9 @@ _ROUTES: dict[str, tuple[str, callable, str | None]] = {
     "menu":         (_WELCOME,        main_menu,          "Markdown"),
     "info":         (_INFO,           info_menu,          "Markdown"),
     "mentorship":   (_MENTORSHIP,     back_to_start,      "Markdown"),
+    "health":       (_HEALTH,         health_menu,        "Markdown"),
+    "ippt":         (_IPPT,           back_to_start,      "Markdown"),
+    "welfare":      (_WELFARE,        welfare_menu,       "Markdown"),
     "policies":     (_POLICIES,       policies_menu,      "Markdown"),
     "dress":        (_DRESS,          back_to_start,      "Markdown"),
     "harassment":   (_HARASSMENT,     back_to_start,      "Markdown"),

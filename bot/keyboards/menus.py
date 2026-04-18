@@ -3,9 +3,11 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 def main_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("📱 RSAF WINGS Information", callback_data="info")],
-        [InlineKeyboardButton("📋 Policies & Guidelines",  callback_data="policies")],
-        [InlineKeyboardButton("📲 Contact & Channels",     callback_data="contact")],
+        [InlineKeyboardButton("📱 RSAF WINGS Information",  callback_data="info")],
+        [InlineKeyboardButton("💪 Health & Fitness",        callback_data="health")],
+        [InlineKeyboardButton("🤱 Welfare & Support",       callback_data="welfare")],
+        [InlineKeyboardButton("📋 Policies & Guidelines",   callback_data="policies")],
+        [InlineKeyboardButton("📲 Contact & Channels",      callback_data="contact")],
     ])
 
 
@@ -14,16 +16,29 @@ def info_menu() -> InlineKeyboardMarkup:
         [InlineKeyboardButton("🌱 Mentorship Programmes",  callback_data="mentorship")],
         [InlineKeyboardButton("🔗 Mentorship Sign-Up",
                               url="https://go.gov.sg/rsafwingsmentorshipsignup")],
-        [InlineKeyboardButton("◀️ Back",                  callback_data="menu")],
+        [InlineKeyboardButton("◀️ Back",                   callback_data="menu")],
+    ])
+
+
+def health_menu() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("🏃 IPPT Standards",         callback_data="ippt")],
+        [InlineKeyboardButton("◀️ Back",                   callback_data="menu")],
+    ])
+
+
+def welfare_menu() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("🤱 Nursing Room Finder",    callback_data="nursing")],
+        [InlineKeyboardButton("◀️ Back",                   callback_data="menu")],
     ])
 
 
 def policies_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("📋 Dress Code",              callback_data="dress")],
-        [InlineKeyboardButton("🤱 Nursing Room",            callback_data="nursing")],
         [InlineKeyboardButton("⚠️ Harassment & Misconduct", callback_data="harassment")],
-        [InlineKeyboardButton("◀️ Back",                   callback_data="menu")],
+        [InlineKeyboardButton("◀️ Back",                    callback_data="menu")],
     ])
 
 
@@ -46,7 +61,7 @@ def anon_feedback_menu() -> InlineKeyboardMarkup:
 
 def nursing_back_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("◀️ Back", callback_data="policies")],
+        [InlineKeyboardButton("◀️ Back", callback_data="welfare")],
     ])
 
 
