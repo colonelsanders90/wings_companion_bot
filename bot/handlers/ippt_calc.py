@@ -179,7 +179,7 @@ async def got_age(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         f"✅ Age: *{age}*\n\n"
         "*Step 2 of 4 — Push-ups (bent-knee)*\n\n"
         "How many push-ups did you complete?\n"
-        "_(Type a number between 0 and 25)_",
+        "_(Type a number between 0 and 60)_",
         _cancel_kb(),
     )
     return ASK_PUSHUPS
@@ -191,7 +191,7 @@ async def got_pushups(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 
     try:
         pushups = int(raw)
-        if not (0 <= pushups <= 25):
+        if not (0 <= pushups <= 60):
             raise ValueError
     except ValueError:
         await _edit_prompt(
@@ -200,7 +200,7 @@ async def got_pushups(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
             "━━━━━━━━━━━━━━━━━━\n\n"
             f"✅ Age: *{context.user_data[_KEY]['age']}*\n\n"
             "*Step 2 of 4 — Push-ups (bent-knee)*\n\n"
-            "⚠️ Please enter a whole number between *0 and 25*:",
+            "⚠️ Please enter a whole number between *0 and 60*:",
             _cancel_kb(),
         )
         return ASK_PUSHUPS
@@ -216,7 +216,7 @@ async def got_pushups(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
         f"✅ Push-ups: *{pushups}*\n\n"
         "*Step 3 of 4 — Sit-ups*\n\n"
         "How many sit-ups did you complete?\n"
-        "_(Type a number between 0 and 25)_",
+        "_(Type a number between 0 and 60)_",
         _cancel_kb(),
     )
     return ASK_SITUPS
@@ -228,7 +228,7 @@ async def got_situps(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     try:
         situps = int(raw)
-        if not (0 <= situps <= 25):
+        if not (0 <= situps <= 60):
             raise ValueError
     except ValueError:
         data = context.user_data[_KEY]
@@ -239,7 +239,7 @@ async def got_situps(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             f"✅ Age: *{data['age']}*\n"
             f"✅ Push-ups: *{data['pushups']}*\n\n"
             "*Step 3 of 4 — Sit-ups*\n\n"
-            "⚠️ Please enter a whole number between *0 and 25*:",
+            "⚠️ Please enter a whole number between *0 and 60*:",
             _cancel_kb(),
         )
         return ASK_SITUPS
@@ -256,7 +256,7 @@ async def got_situps(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         f"✅ Sit-ups: *{situps}*\n\n"
         "*Step 4 of 4 — 2.4 km Run*\n\n"
         "What was your run time?\n"
-        "_(Type in MM:SS format, e.g. `18:30`)_",
+        "_(Type in MM:SS format, e.g. `14:30`. Fastest accepted: `08:00`)_",
         _cancel_kb(),
     )
     return ASK_RUN
@@ -280,7 +280,7 @@ async def got_run(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             f"✅ Push-ups: *{data['pushups']}*\n"
             f"✅ Sit-ups: *{data['situps']}*\n\n"
             "*Step 4 of 4 — 2.4 km Run*\n\n"
-            "⚠️ Please enter time in *MM:SS* format _(e.g. `18:30`)_:",
+            "⚠️ Please enter time in *MM:SS* format _(e.g. `14:30`)_:",
             _cancel_kb(),
         )
         return ASK_RUN
@@ -288,8 +288,8 @@ async def got_run(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     minutes, seconds = int(match.group(1)), int(match.group(2))
     run_secs = minutes * 60 + seconds
 
-    # Sanity check: must be between 13:00 (780s) and 40:00 (2400s)
-    if not (600 <= run_secs <= 2400):
+    # Sanity check: must be between 08:00 (480s) and 40:00 (2400s)
+    if not (480 <= run_secs <= 2400):
         data = context.user_data[_KEY]
         await _edit_prompt(
             context,
@@ -299,8 +299,8 @@ async def got_run(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             f"✅ Push-ups: *{data['pushups']}*\n"
             f"✅ Sit-ups: *{data['situps']}*\n\n"
             "*Step 4 of 4 — 2.4 km Run*\n\n"
-            "⚠️ That time looks unusual. Please enter a realistic run time "
-            "_(e.g. `18:30`)_:",
+            "⚠️ Please enter a time between *08:00 and 40:00* "
+            "_(e.g. `14:30`)_:",
             _cancel_kb(),
         )
         return ASK_RUN
