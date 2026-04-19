@@ -23,6 +23,7 @@ def info_menu() -> InlineKeyboardMarkup:
 def health_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("🏃 IPPT Standards",         callback_data="ippt")],
+        [InlineKeyboardButton("🧮 IPPT Calculator",        callback_data="ippt_calc")],
         [InlineKeyboardButton("◀️ Back",                   callback_data="menu")],
     ])
 
