@@ -5,6 +5,10 @@ from telegram.ext import ContextTypes
 
 from bot.keyboards.menus import (
     anon_feedback_menu,
+    back_to_contact,
+    back_to_health,
+    back_to_info,
+    back_to_policies,
     back_to_start,
     contact_menu,
     health_menu,
@@ -103,16 +107,16 @@ _ANON_FEEDBACK = (
 _ROUTES: dict[str, tuple[str, callable, str | None]] = {
     "menu":         (_WELCOME,        main_menu,          "Markdown"),
     "info":         (_INFO,           info_menu,          "Markdown"),
-    "mentorship":   (_MENTORSHIP,     back_to_start,      "Markdown"),
+    "mentorship":   (_MENTORSHIP,     back_to_info,       "Markdown"),
     "health":       (_HEALTH,         health_menu,        "Markdown"),
-    "ippt":         (_IPPT,           back_to_start,      "Markdown"),
+    "ippt":         (_IPPT,           back_to_health,     "Markdown"),
     "welfare":      (_WELFARE,        welfare_menu,       "Markdown"),
     "policies":     (_POLICIES,       policies_menu,      "Markdown"),
-    "dress":        (_DRESS,          back_to_start,      "Markdown"),
-    "harassment":   (_HARASSMENT,     back_to_start,      "Markdown"),
+    "dress":        (_DRESS,          back_to_policies,   "Markdown"),
+    "harassment":   (_HARASSMENT,     back_to_policies,   "Markdown"),
     "contact":      (_CONTACT,        contact_menu,       "Markdown"),
-    "channel":      (_CHANNEL,        back_to_start,      None),
-    "email":        (_EMAIL,          back_to_start,      None),
+    "channel":      (_CHANNEL,        back_to_contact,    None),
+    "email":        (_EMAIL,          back_to_contact,    None),
     "anon_feedback":(_ANON_FEEDBACK,  anon_feedback_menu, "Markdown"),
 }
 

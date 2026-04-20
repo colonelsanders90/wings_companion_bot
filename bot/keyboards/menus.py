@@ -70,3 +70,27 @@ def back_to_start() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("◀️ Back to Start", callback_data="menu")],
     ])
+
+
+def back_to_info() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("◀️ Back", callback_data="info")],
+    ])
+
+
+def back_to_health() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("◀️ Back", callback_data="health")],
+    ])
+
+
+def back_to_policies() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("◀️ Back", callback_data="policies")],
+    ])
+
+
+def back_to_contact() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("◀️ Back", callback_data="contact")],
+    ])
