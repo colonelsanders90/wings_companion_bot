@@ -163,6 +163,13 @@ def _run_text(data: dict, *, error: bool = False) -> str:
     )
 
 
+def _fmt_improvement(seconds: int) -> str:
+    """Format a time improvement, e.g. 10 → '10s', 70 → '1:10'."""
+    if seconds < 60:
+        return f"{seconds}s"
+    return f"{seconds // 60}:{seconds % 60:02d}"
+
+
 def _build_result_text(data: dict) -> str:
     """Format the final results message."""
     score   = compute_score(data["age"], data["pushups"], data["situps"], data["run_secs"])
@@ -180,17 +187,27 @@ def _build_result_text(data: dict) -> str:
     su_bar    = _progress_bar(score["situp_pts"],   25)
     run_bar   = _progress_bar(score["run_pts"],     50)
 
+    # "how close to +1 pt?" hints — blank string when already at max
+    n = score["pu_next_reps"]
+    pu_hint = f"\n     _+{n} rep{'s' if n != 1 else ''} → +1 pt_" if n else ""
+
+    n = score["su_next_reps"]
+    su_hint = f"\n     _+{n} rep{'s' if n != 1 else ''} → +1 pt_" if n else ""
+
+    n = score["run_next_secs"]
+    run_hint = f"\n     _{_fmt_improvement(n)} faster → +1 pt_" if n else ""
+
     return (
         "🧮 *IPPT RESULT (FEMALE)*\n"
         "━━━━━━━━━━━━━━━━━━\n\n"
         f"👤 Age group: *{score['age_group']}*\n\n"
         "📊 *Station Breakdown*\n"
         f"  🤸 Push-ups ({data['pushups']} reps)\n"
-        f"     {pu_bar}  *{score['pushup_pts']}/25 pts*\n\n"
+        f"     {pu_bar}  *{score['pushup_pts']}/25 pts*{pu_hint}\n\n"
         f"  💪 Sit-ups ({data['situps']} reps)\n"
-        f"     {su_bar}  *{score['situp_pts']}/25 pts*\n\n"
+        f"     {su_bar}  *{score['situp_pts']}/25 pts*{su_hint}\n\n"
         f"  🏃 2.4 km Run ({run_fmt})\n"
-        f"     {run_bar}  *{score['run_pts']}/50 pts*\n\n"
+        f"     {run_bar}  *{score['run_pts']}/50 pts*{run_hint}\n\n"
         "━━━━━━━━━━━━━━━━━━\n"
         f"🏅 *Total: {score['total']}/100*\n"
         f"     {total_bar}\n\n"

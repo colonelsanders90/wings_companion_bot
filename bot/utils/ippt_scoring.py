@@ -230,6 +230,32 @@ def points_to_next_award(total: int) -> tuple[str, int] | None:
     return None
 
 
+def reps_to_next_point(reps: int, age_group: int) -> int | None:
+    """Return how many additional reps earn +1 point, or None if already at max (25)."""
+    current_pts = get_reps_points(reps, age_group)
+    if current_pts >= 25:
+        return None
+    for extra in range(1, 62):
+        if get_reps_points(reps + extra, age_group) > current_pts:
+            return extra
+    return None
+
+
+def seconds_to_next_run_point(run_seconds: int, age_group: int) -> int | None:
+    """Return how many fewer seconds earn +1 run point, or None if already at max (50).
+
+    Walks the table backwards (slowest → fastest) to find the nearest faster
+    bracket that awards a higher point value.
+    """
+    current_pts = get_run_points(run_seconds, age_group)
+    if current_pts >= 50:
+        return None
+    for row_time, pts in reversed(_FEMALE_RUN):
+        if row_time < run_seconds and pts[age_group] > current_pts:
+            return run_seconds - row_time
+    return None
+
+
 def compute_score(
     age: int,
     pushups: int,
@@ -243,14 +269,18 @@ def compute_score(
     run_pts = get_run_points(run_seconds, ag)
     total   = pu_pts + su_pts + run_pts
     return {
-        "age_group":   get_age_group_label(age),
-        "pushup_pts":  pu_pts,
-        "situp_pts":   su_pts,
-        "run_pts":     run_pts,
-        "total":       total,
-        "award":       get_award(total),
-        "incentive":   get_incentive(total),
-        "next_award":  points_to_next_award(total),
+        "age_group":    get_age_group_label(age),
+        "pushup_pts":   pu_pts,
+        "situp_pts":    su_pts,
+        "run_pts":      run_pts,
+        "total":        total,
+        "award":        get_award(total),
+        "incentive":    get_incentive(total),
+        "next_award":   points_to_next_award(total),
+        # "how close am I to +1 pt?" hints
+        "pu_next_reps":  reps_to_next_point(pushups, ag),
+        "su_next_reps":  reps_to_next_point(situps,  ag),
+        "run_next_secs": seconds_to_next_run_point(run_seconds, ag),
     }
 
 
