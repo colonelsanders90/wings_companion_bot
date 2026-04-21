@@ -10,6 +10,7 @@ Flow:
 from __future__ import annotations
 
 import logging
+import random
 import re
 
 from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update
@@ -25,6 +26,25 @@ from telegram.ext import (
 from bot.utils.ippt_scoring import compute_score, fmt_seconds
 
 logger = logging.getLogger(__name__)
+
+# ── Encouraging quotes ────────────────────────────────────────────────────────
+_QUOTES: list[str] = [
+    "Every rep counts. Every second matters. Keep pushing! 💪",
+    "Progress is progress, no matter how small. Be proud of yourself! 🌟",
+    "The hardest part is showing up — and you did. 🙌",
+    "Strong women lift each other up — and lift themselves too! 🏋️‍♀️",
+    "Discipline today, strength tomorrow. You've got this! 🔥",
+    "Your only competition is who you were yesterday. 🏅",
+    "Sweat now, shine later. Keep going! ✨",
+    "Fitness is not about being better than someone else — it's about being better than you used to be. 💫",
+    "One run at a time. One rep at a time. One day at a time. 🌈",
+    "Believe in yourself and all that you are. You are stronger than you think! 💖",
+    "Great things never come from comfort zones. Push through! 🚀",
+    "You train, you sweat, you improve. That's the WINGS spirit! 🦅",
+    "Rest if you must, but don't you quit. 🛡️",
+    "The body achieves what the mind believes. 🧠💪",
+    "Champions aren't made in gyms — they're made from what they have inside. 🏆",
+]
 
 # ── Conversation states ───────────────────────────────────────────────────────
 ASK_AGE, ASK_PUSHUPS, ASK_SITUPS, ASK_RUN = range(4)
@@ -197,6 +217,8 @@ def _build_result_text(data: dict) -> str:
     n = score["run_next_secs"]
     run_hint = f"\n     _{_fmt_improvement(n)} faster → +1 pt_" if n else ""
 
+    quote = random.choice(_QUOTES)
+
     return (
         "🧮 *IPPT RESULT (FEMALE)*\n"
         "━━━━━━━━━━━━━━━━━━\n\n"
@@ -214,6 +236,7 @@ def _build_result_text(data: dict) -> str:
         f"*Award: {score['award']}*{incentive}"
         f"{next_info}\n\n"
         "━━━━━━━━━━━━━━━━━━\n"
+        f"_{quote}_\n\n"
         "_⚠️ Based on SAF 2015 IPPT format. "
         "Always verify with the official NS Portal._"
     )
