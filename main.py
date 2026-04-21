@@ -13,6 +13,7 @@ from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandle
 
 import config
 from bot.handlers.callbacks import button
+from bot.handlers.bmi_calc import build_bmi_conv_handler
 from bot.handlers.commands import start
 from bot.handlers.ippt_calc import build_ippt_conv_handler
 from bot.handlers.location_handler import handle_location
@@ -29,6 +30,7 @@ def build_app():
     app.add_handler(CommandHandler("start", start))
     # ConversationHandler must be registered BEFORE the catch-all CallbackQueryHandler
     app.add_handler(build_ippt_conv_handler())
+    app.add_handler(build_bmi_conv_handler())
     app.add_handler(CallbackQueryHandler(button))
     app.add_handler(MessageHandler(filters.LOCATION, handle_location))
     return app

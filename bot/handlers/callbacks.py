@@ -61,16 +61,44 @@ _HEALTH = "💪 *HEALTH & FITNESS*\n\nSelect a topic:"
 _IPPT = (
     "🏃 *IPPT STANDARDS (FEMALE)*\n\n"
     "IPPT consists of 3 stations:\n"
-    "• *Push-ups* (1 min)\n"
+    "• *Push-ups* — bent-knee (1 min)\n"
     "• *Sit-ups* (1 min)\n"
-    "• *2.4km Run*\n\n"
+    "• *2.4 km Run*\n\n"
     "🏅 *Award Levels*\n"
-    "• 🥇 Gold — ≥ 85 points\n"
-    "• 🥈 Silver — 75–84 points\n"
-    "• ✅ Pass — 51–74 points\n\n"
-    "📅 Point requirements ease with age group (22 & below through 45+).\n\n"
-    "⚠️ Pregnant and post-natal servicewomen are exempt — consult your MO for the exemption period.\n\n"
-    "_Verify exact cutoffs for your age group on the official NS Portal IPPT calculator._"
+    "• 🥇 Gold — ≥ 85 points _(+$300 incentive)_\n"
+    "• 🥈 Silver — 75–84 points _(+$200 incentive)_\n"
+    "• ✅ Pass — 51–74 points\n"
+    "• ❌ Fail — < 51 points\n\n"
+    "Point requirements ease across 14 age groups (below 22 through 58–60).\n\n"
+    "🔖 *Exemptions for Servicewomen*\n"
+    "_(AFTD 01/15)_\n\n"
+    "Uniformed regular servicewomen are exempted under any of the following:\n\n"
+    "*(a)* In a state of *pregnancy*, with IRB approval for temporary exemption.\n\n"
+    "*(b)* *Combat vocationalists* within the one-year post-delivery or miscarriage period.\n\n"
+    "*(c)* *Non-combat vocationalists* who are:\n"
+    "  — On post-delivery or miscarriage (any age), with IRB approval for permanent exemption; or\n"
+    "  — Aged *35 and above* as at 1 Apr of the Physical Fitness Test Window.\n\n"
+    "_Verify exact score cutoffs for your age group on the official NS Portal IPPT calculator._"
+)
+
+_BMI = (
+    "⚖️ *BMI STANDARDS*\n\n"
+    "BMI = weight (kg) ÷ height² (m²)\n\n"
+    "📊 *BMI Categories*\n"
+    "• < 18.5 — Underweight\n"
+    "• 18.5 – 24.9 — Normal Weight\n"
+    "• 25.0 – 26.9 — Overweight (Mild)\n"
+    "• 27.0 – 29.9 — Overweight (Moderate)\n"
+    "• 30.0 – 32.4 — Obese\n"
+    "• 32.5 – 39.9 — Severely Obese\n"
+    "• ≥ 40.0 — Very Severely Obese\n\n"
+    "🔖 *Exemptions for Servicewomen*\n"
+    "_(JMD No. 4-6(A))_\n\n"
+    "Servicewomen who are *pregnant* (certified by a gynaecologist or obstetrician "
+    "with the estimated date of delivery) are *automatically exempted* from BMI "
+    "measurement — no exemption request needed.\n\n"
+    "They will resume BMI monitoring in the following workyear post-delivery.\n\n"
+    "_BMI is a general screening tool. For personalised health advice, consult your MO._"
 )
 
 _WELFARE = "🤱 *WELFARE & SUPPORT*\n\nSelect a topic:"
@@ -110,6 +138,7 @@ _ROUTES: dict[str, tuple[str, callable, str | None]] = {
     "mentorship":   (_MENTORSHIP,     back_to_info,       "Markdown"),
     "health":       (_HEALTH,         health_menu,        "Markdown"),
     "ippt":         (_IPPT,           back_to_health,     "Markdown"),
+    "bmi":          (_BMI,            back_to_health,     "Markdown"),
     "welfare":      (_WELFARE,        welfare_menu,       "Markdown"),
     "policies":     (_POLICIES,       policies_menu,      "Markdown"),
     "dress":        (_DRESS,          back_to_policies,   "Markdown"),
