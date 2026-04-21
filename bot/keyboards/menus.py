@@ -5,7 +5,7 @@ def main_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("📱 RSAF WINGS Information",  callback_data="info")],
         [InlineKeyboardButton("💪 Health & Fitness",        callback_data="health")],
-        [InlineKeyboardButton("🤱 Welfare & Support",       callback_data="welfare")],
+        [InlineKeyboardButton("🤱 Facilities & Support",     callback_data="welfare")],
         [InlineKeyboardButton("📋 Policies & Guidelines",   callback_data="policies")],
         [InlineKeyboardButton("📲 Contact & Channels",      callback_data="contact")],
     ])

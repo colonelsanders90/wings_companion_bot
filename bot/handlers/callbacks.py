@@ -101,7 +101,7 @@ _BMI = (
     "_BMI is a general screening tool. For personalised health advice, consult your MO._"
 )
 
-_WELFARE = "🤱 *WELFARE & SUPPORT*\n\nSelect a topic:"
+_WELFARE = "🤱 *FACILITIES & SUPPORT*\n\nSelect a topic:"
 
 _NURSING_PROMPT = (
     "🤱 *FIND NEARBY LACTATION ROOMS*\n\n"
