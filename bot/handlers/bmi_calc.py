@@ -20,6 +20,8 @@ from telegram.ext import (
     filters,
 )
 
+from bot.utils.rate_limiter import rate_limit
+
 logger = logging.getLogger(__name__)
 
 # ── Conversation states ───────────────────────────────────────────────────────
@@ -176,6 +178,7 @@ def _build_result_text(data: dict) -> str:
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
+@rate_limit
 async def bmi_calc_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query: CallbackQuery = update.callback_query
     await query.answer()

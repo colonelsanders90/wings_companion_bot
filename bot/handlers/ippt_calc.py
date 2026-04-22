@@ -24,6 +24,7 @@ from telegram.ext import (
 )
 
 from bot.utils.ippt_scoring import compute_score, fmt_seconds
+from bot.utils.rate_limiter import rate_limit
 
 logger = logging.getLogger(__name__)
 
@@ -244,6 +245,7 @@ def _build_result_text(data: dict) -> str:
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
+@rate_limit
 async def ippt_calc_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Triggered by the 'ippt_calc' inline button."""
     query: CallbackQuery = update.callback_query

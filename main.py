@@ -9,12 +9,13 @@ Entry point — supports both polling (Railway / local) and webhook (AWS) modes.
 
 import logging
 
-from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, MessageHandler, filters
+from telegram.ext import AIORateLimiter, ApplicationBuilder, CallbackQueryHandler, CommandHandler, MessageHandler, filters
 
 import config
 from bot.handlers.callbacks import button
 from bot.handlers.bmi_calc import build_bmi_conv_handler
 from bot.handlers.commands import start
+from bot.handlers.error_handler import handle_error
 from bot.handlers.ippt_calc import build_ippt_conv_handler
 from bot.handlers.location_handler import handle_location
 
@@ -26,7 +27,15 @@ logger = logging.getLogger(__name__)
 
 
 def build_app():
-    app = ApplicationBuilder().token(config.BOT_TOKEN).build()
+    app = (
+        ApplicationBuilder()
+        .token(config.BOT_TOKEN)
+        .rate_limiter(AIORateLimiter())  # throttle outgoing Telegram API calls
+        .build()
+    )
+    # Global error handler — catches all unhandled exceptions from handlers
+    app.add_error_handler(handle_error)
+
     app.add_handler(CommandHandler("start", start))
     # ConversationHandler must be registered BEFORE the catch-all CallbackQueryHandler
     app.add_handler(build_ippt_conv_handler())

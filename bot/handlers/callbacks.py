@@ -19,6 +19,7 @@ from bot.keyboards.menus import (
     welfare_menu,
 )
 from bot.utils.helpers import safe_edit
+from bot.utils.rate_limiter import rate_limit
 
 logger = logging.getLogger(__name__)
 
@@ -176,6 +177,7 @@ async def _cleanup_nursing(context: ContextTypes.DEFAULT_TYPE, chat_id: int) -> 
                 pass
 
 
+@rate_limit
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
 

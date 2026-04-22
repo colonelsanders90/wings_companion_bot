@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.keyboards.menus import main_menu
+from bot.utils.rate_limiter import rate_limit
 
 WELCOME_TEXT = (
     "Dear servicewomen,\n\n"
@@ -23,6 +24,7 @@ WELCOME_TEXT = (
 )
 
 
+@rate_limit
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         WELCOME_TEXT,
