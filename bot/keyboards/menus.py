@@ -32,7 +32,7 @@ def health_menu() -> InlineKeyboardMarkup:
 
 def welfare_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("🤱 Nursing Room Finder",    callback_data="nursing")],
+        [InlineKeyboardButton("🤱 Lactation Room Finder",   callback_data="nursing")],
         [InlineKeyboardButton("◀️ Back",                   callback_data="menu")],
     ])
 

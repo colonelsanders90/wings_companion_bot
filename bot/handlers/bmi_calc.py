@@ -172,7 +172,8 @@ def _build_result_text(data: dict) -> str:
         f"{advice_block}"
         f"{pbf_block}\n\n"
         "━━━━━━━━━━━━━━━━━━\n"
-        "_BMI is a general screening tool. For personalised health advice, consult your MO._"
+        "_BMI is a general screening tool. For personalised health advice, consult your MO._\n\n"
+        "💬 _If fitness or BMI concerns are causing uncertainty or stress, some personnel may also find it helpful to speak to an Ascend / Vanguard mentor for peer perspectives on managing expectations and progression over time._"
     )
 
 
