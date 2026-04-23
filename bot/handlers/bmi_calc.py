@@ -150,14 +150,17 @@ def _build_result_text(data: dict) -> str:
     advice_block = f"\n\n_{advice}_" if advice else ""
 
     if bmi >= 27.0:
-        target_weight = 27.0 * height ** 2
-        weight_to_lose = weight - target_weight
+        target_27  = 27.0 * height ** 2
+        target_25  = 25.0 * height ** 2
+        lose_to_27 = weight - target_27
+        lose_to_25 = weight - target_25
         pbf_block = (
             "\n\n📋 *Percentage Body Fat (PBF) Assessment*\n"
             "As your BMI is above 27, consider making an appointment with your Medical Centre "
             "to take a PBF measurement. The healthy threshold for servicewomen is *< 32%*.\n\n"
-            f"⚖️ *To reach BMI 27.0*, you would need to lose approximately "
-            f"*{weight_to_lose:.1f} kg* (target weight: {target_weight:.1f} kg)."
+            "🎯 *Weight targets*\n"
+            f"• BMI 27.0 — lose *{lose_to_27:.1f} kg* (target: {target_27:.1f} kg)\n"
+            f"• BMI 25.0 — lose *{lose_to_25:.1f} kg* (target: {target_25:.1f} kg)"
         )
     else:
         pbf_block = ""
